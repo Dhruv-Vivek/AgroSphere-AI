@@ -1,0 +1,106 @@
+[
+  {
+    "category": "Fertilizer",
+    "name": "Urea",
+    "type": "Nitrogen",
+    "company": "IFFCO",
+    "unit": "₹/45kg bag",
+    "data": [
+      { "month": "Jan 2026", "price": 266, "availability": "High" },
+      { "month": "Feb 2026", "price": 266, "availability": "High" },
+      { "month": "Mar 2026", "price": 270, "availability": "Medium" },
+      { "month": "Apr 2026", "price": 275, "availability": "Medium" }
+    ]
+  },
+  {
+    "category": "Fertilizer",
+    "name": "DAP",
+    "type": "Phosphorus",
+    "company": "KRIBHCO",
+    "unit": "₹/50kg bag",
+    "data": [
+      { "month": "Jan 2026", "price": 1350, "availability": "Medium" },
+      { "month": "Feb 2026", "price": 1380, "availability": "Medium" },
+      { "month": "Mar 2026", "price": 1420, "availability": "Low" },
+      { "month": "Apr 2026", "price": 1450, "availability": "Low" }
+    ]
+  },
+  {
+    "category": "Fertilizer",
+    "name": "NPK (10:26:26)",
+    "type": "Mixed",
+    "company": "Coromandel",
+    "unit": "₹/50kg bag",
+    "data": [
+      { "month": "Jan 2026", "price": 1500, "availability": "High" },
+      { "month": "Feb 2026", "price": 1520, "availability": "High" },
+      { "month": "Mar 2026", "price": 1550, "availability": "Medium" },
+      { "month": "Apr 2026", "price": 1580, "availability": "Medium" }
+    ]
+  },
+  {
+    "category": "Fertilizer",
+    "name": "MOP (Potash)",
+    "type": "Potassium",
+    "company": "Imported",
+    "unit": "₹/50kg bag",
+    "data": [
+      { "month": "Jan 2026", "price": 1700, "availability": "Low" },
+      { "month": "Feb 2026", "price": 1750, "availability": "Low" },
+      { "month": "Mar 2026", "price": 1820, "availability": "Low" },
+      { "month": "Apr 2026", "price": 1900, "availability": "Low" }
+    ]
+  },
+  {
+    "category": "Pesticide",
+    "name": "Imidacloprid",
+    "type": "Insecticide",
+    "company": "Bayer",
+    "unit": "₹/100ml",
+    "data": [
+      { "month": "Jan 2026", "price": 650 },
+      { "month": "Feb 2026", "price": 670 },
+      { "month": "Mar 2026", "price": 690 },
+      { "month": "Apr 2026", "price": 710 }
+    ]
+  },
+  {
+    "category": "Pesticide",
+    "name": "Chlorpyrifos",
+    "type": "Insecticide",
+    "company": "UPL",
+    "unit": "₹/500ml",
+    "data": [
+      { "month": "Jan 2026", "price": 480 },
+      { "month": "Feb 2026", "price": 500 },
+      { "month": "Mar 2026", "price": 520 },
+      { "month": "Apr 2026", "price": 540 }
+    ]
+  },
+  {
+    "category": "Pesticide",
+    "name": "Glyphosate",
+    "type": "Herbicide",
+    "company": "Bayer",
+    "unit": "₹/1L",
+    "data": [
+      { "month": "Jan 2026", "price": 620 },
+      { "month": "Feb 2026", "price": 640 },
+      { "month": "Mar 2026", "price": 670 },
+      { "month": "Apr 2026", "price": 700 }
+    ]
+  },
+  {
+    "category": "Pesticide",
+    "name": "Carbendazim",
+    "type": "Fungicide",
+    "company": "Syngenta",
+    "unit": "₹/250g",
+    "data": [
+      { "month": "Jan 2026", "price": 300 },
+      { "month": "Feb 2026", "price": 310 },
+      { "month": "Mar 2026", "price": 325 },
+      { "month": "Apr 2026", "price": 340 }
+    ]
+  }
+]

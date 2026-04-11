@@ -47,18 +47,18 @@ export default function App() {
     <BrowserRouter>
       <MitraChatProvider>
         <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/farm" element={<FarmIntel />} />
-          <Route path="/disease" element={<DiseaseDetection />} />
-          <Route path="/drone" element={<DronePage />} />
-          <Route path="/market" element={<MarketIntelligence />} />
-          <Route path="/irrigation" element={<Irrigation />} />
-          <Route path="/storage" element={<Storage />} />
-          <Route path="/schemes" element={<GovtSchemes />} />
-          <Route path="/traceability" element={<Traceability />} />
-          <Route path="/remote-sensing" element={<RemoteSensing />} />
-        </Route>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/farm" element={<FarmIntel />} />
+            <Route path="/disease" element={<DiseaseDetection />} />
+            <Route path="/drone" element={<DronePage />} />
+            <Route path="/market" element={<MarketIntelligence />} />
+            <Route path="/irrigation" element={<Irrigation />} />
+            <Route path="/storage" element={<Storage />} />
+            <Route path="/schemes" element={<GovtSchemes />} />
+            <Route path="/traceability" element={<Traceability />} />
+            <Route path="/remote-sensing" element={<RemoteSensing />} />
+          </Route>
         </Routes>
       </MitraChatProvider>
     </BrowserRouter>

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "PM-KISAN",
+    "ministry": "Agriculture",
+    "category": "Subsidies",
+    "benefit_amount": "₹6,000/year",
+    "benefit_numeric": 6000,
+    "description": "Income support of ₹6,000 per year in three equal installments to eligible landholding farmer families.",
+    "eligibility_summary": "Small and marginal farmers with cultivable land; family definition as per scheme guidelines.",
+    "documents": ["Aadhaar", "Land records", "Bank account details"],
+    "apply_url": "https://pmkisan.gov.in/",
+    "rules": { "max_land_acres": null, "max_income": null, "categories": ["General", "SC", "ST", "OBC", "Marginal"] }
+  },
+  {
+    "id": "crop-insurance-pmfby",
+    "name": "PMFBY — Crop Insurance",
+    "ministry": "Agriculture",
+    "category": "Insurance",
+    "benefit_amount": "Yield loss coverage",
+    "benefit_numeric": 0,
+    "description": "Pradhan Mantri Fasal Bima Yojana provides affordable crop insurance against natural calamities and pests.",
+    "eligibility_summary": "Farmers growing notified crops in notified areas; loanee and non-loanee farmers.",
+    "documents": ["Land records", "Sowing declaration", "Bank passbook"],
+    "apply_url": "https://pmfby.gov.in/",
+    "rules": { "max_land_acres": null, "max_income": null, "categories": ["General", "SC", "ST", "OBC", "Marginal"] }
+  },
+  {
+    "id": "kcc",
+    "name": "Kisan Credit Card (KCC)",
+    "ministry": "Finance",
+    "category": "Loans",
+    "benefit_amount": "Up to ₹3L credit",
+    "benefit_numeric": 300000,
+    "description": "Short-term credit for crop production and allied activities at concessional interest rates.",
+    "eligibility_summary": "Farmers engaged in agriculture or allied activities with land or tenancy proof.",
+    "documents": ["Land/lease proof", "Identity proof", "Income estimate"],
+    "apply_url": "https://www.rbi.org.in/",
+    "rules": { "max_land_acres": null, "max_income": 1200000, "categories": ["General", "SC", "ST", "OBC", "Marginal"] }
+  },
+  {
+    "id": "soil-health",
+    "name": "Soil Health Card Scheme",
+    "ministry": "Agriculture",
+    "category": "Training",
+    "benefit_amount": "Free soil testing",
+    "benefit_numeric": 0,
+    "description": "Soil testing and recommendations for balanced fertilizer use to improve productivity.",
+    "eligibility_summary": "All farmers can request soil health cards through agriculture department.",
+    "documents": ["Farm location", "Survey/khasra reference"],
+    "apply_url": "https://soilhealth.dac.gov.in/",
+    "rules": { "max_land_acres": null, "max_income": null, "categories": ["General", "SC", "ST", "OBC", "Marginal"] }
+  },
+  {
+    "id": "agri-infra-fund",
+    "name": "Agriculture Infrastructure Fund",
+    "ministry": "Agriculture",
+    "category": "Loans",
+    "benefit_amount": "Interest subvention",
+    "benefit_numeric": 0,
+    "description": "Financing for post-harvest infrastructure including cold chains, sorting, and processing units.",
+    "eligibility_summary": "FPOs, PACS, agri-entrepreneurs, and farmers meeting project criteria.",
+    "documents": ["Project report", "KYC", "Collateral as per lender"],
+    "apply_url": "https://agricoop.nic.in/",
+    "rules": { "max_land_acres": null, "max_income": 2500000, "categories": ["General", "SC", "ST", "OBC", "Marginal"] }
+  }
+]

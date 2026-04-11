@@ -1,0 +1,272 @@
+[
+  {
+    "name": "Wheat",
+    "current_price": 2420,
+    "min_price": 2280,
+    "max_price": 2580,
+    "trend": "stable",
+    "demand_index": 0.72,
+    "state_prices": {
+      "Punjab": 2460,
+      "Uttar Pradesh": 2380,
+      "Madhya Pradesh": 2410,
+      "Haryana": 2455,
+      "Rajasthan": 2365
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Cereal"
+  },
+  {
+    "name": "Rice",
+    "current_price": 2180,
+    "min_price": 2050,
+    "max_price": 2320,
+    "trend": "up",
+    "demand_index": 0.81,
+    "state_prices": {
+      "West Bengal": 2140,
+      "Andhra Pradesh": 2210,
+      "Punjab": 2260,
+      "Odisha": 2095,
+      "Tamil Nadu": 2235
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Cereal"
+  },
+  {
+    "name": "Cotton",
+    "current_price": 6120,
+    "min_price": 5850,
+    "max_price": 6480,
+    "trend": "down",
+    "demand_index": 0.58,
+    "state_prices": {
+      "Maharashtra": 6050,
+      "Gujarat": 6180,
+      "Telangana": 6090,
+      "Karnataka": 5980,
+      "Madhya Pradesh": 6145
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Fiber"
+  },
+  {
+    "name": "Tomato",
+    "current_price": 2850,
+    "min_price": 2100,
+    "max_price": 4200,
+    "trend": "up",
+    "demand_index": 0.88,
+    "state_prices": {
+      "Karnataka": 2780,
+      "Maharashtra": 2920,
+      "Andhra Pradesh": 3010,
+      "Uttar Pradesh": 2680,
+      "Haryana": 2755
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Vegetable"
+  },
+  {
+    "name": "Potato",
+    "current_price": 1180,
+    "min_price": 980,
+    "max_price": 1420,
+    "trend": "stable",
+    "demand_index": 0.76,
+    "state_prices": {
+      "Uttar Pradesh": 1120,
+      "West Bengal": 1210,
+      "Punjab": 1165,
+      "Bihar": 1095,
+      "Gujarat": 1190
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Vegetable"
+  },
+  {
+    "name": "Maize",
+    "current_price": 1980,
+    "min_price": 1860,
+    "max_price": 2120,
+    "trend": "stable",
+    "demand_index": 0.64,
+    "state_prices": {
+      "Karnataka": 2020,
+      "Maharashtra": 1950,
+      "Telangana": 1990,
+      "Bihar": 1925,
+      "Rajasthan": 1975
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Cereal"
+  },
+  {
+    "name": "Sugarcane",
+    "current_price": 340,
+    "min_price": 315,
+    "max_price": 365,
+    "trend": "up",
+    "demand_index": 0.69,
+    "state_prices": {
+      "Uttar Pradesh": 335,
+      "Maharashtra": 345,
+      "Karnataka": 338,
+      "Tamil Nadu": 342,
+      "Bihar": 328
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Cash crop"
+  },
+  {
+    "name": "Mustard",
+    "current_price": 5280,
+    "min_price": 4980,
+    "max_price": 5520,
+    "trend": "up",
+    "demand_index": 0.74,
+    "state_prices": {
+      "Rajasthan": 5220,
+      "Haryana": 5310,
+      "Madhya Pradesh": 5180,
+      "Uttar Pradesh": 5255,
+      "Gujarat": 5195
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Oilseed"
+  },
+  {
+    "name": "Groundnut",
+    "current_price": 5850,
+    "min_price": 5480,
+    "max_price": 6180,
+    "trend": "stable",
+    "demand_index": 0.67,
+    "state_prices": {
+      "Gujarat": 5920,
+      "Karnataka": 5780,
+      "Andhra Pradesh": 5810,
+      "Tamil Nadu": 5755,
+      "Rajasthan": 5680
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Oilseed"
+  },
+  {
+    "name": "Soybean",
+    "current_price": 4320,
+    "min_price": 4050,
+    "max_price": 4580,
+    "trend": "down",
+    "demand_index": 0.61,
+    "state_prices": {
+      "Madhya Pradesh": 4380,
+      "Maharashtra": 4280,
+      "Rajasthan": 4210,
+      "Karnataka": 4155,
+      "Telangana": 4240
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Oilseed"
+  },
+  {
+    "name": "Onion",
+    "current_price": 1950,
+    "min_price": 1450,
+    "max_price": 2680,
+    "trend": "down",
+    "demand_index": 0.83,
+    "state_prices": {
+      "Maharashtra": 2020,
+      "Karnataka": 1880,
+      "Gujarat": 1925,
+      "Madhya Pradesh": 1980,
+      "Rajasthan": 1855
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Vegetable"
+  },
+  {
+    "name": "Chilli",
+    "current_price": 18500,
+    "min_price": 16200,
+    "max_price": 21400,
+    "trend": "up",
+    "demand_index": 0.79,
+    "state_prices": {
+      "Andhra Pradesh": 19200,
+      "Karnataka": 18100,
+      "Maharashtra": 17850,
+      "Telangana": 18800,
+      "Odisha": 17500
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Spice"
+  },
+  {
+    "name": "Mango",
+    "current_price": 8200,
+    "min_price": 6400,
+    "max_price": 11200,
+    "trend": "stable",
+    "demand_index": 0.91,
+    "state_prices": {
+      "Uttar Pradesh": 7800,
+      "Maharashtra": 8500,
+      "Karnataka": 8100,
+      "Gujarat": 7950,
+      "Andhra Pradesh": 8350
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Fruit"
+  },
+  {
+    "name": "Banana",
+    "current_price": 1950,
+    "min_price": 1680,
+    "max_price": 2280,
+    "trend": "stable",
+    "demand_index": 0.77,
+    "state_prices": {
+      "Tamil Nadu": 2020,
+      "Maharashtra": 1920,
+      "Gujarat": 1880,
+      "Karnataka": 1960,
+      "Andhra Pradesh": 1995
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Fruit"
+  },
+  {
+    "name": "Turmeric",
+    "current_price": 14200,
+    "min_price": 12800,
+    "max_price": 15800,
+    "trend": "up",
+    "demand_index": 0.86,
+    "state_prices": {
+      "Maharashtra": 13800,
+      "Telangana": 14550,
+      "Andhra Pradesh": 14400,
+      "Tamil Nadu": 14100,
+      "Odisha": 13650
+    },
+    "last_updated": "2026-04-11T06:30:00.000Z",
+    "unit": "INR per quintal",
+    "category": "Spice"
+  }
+]

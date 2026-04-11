@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { fetchPrices, fetchNews } from "../api/marketApi"
 import mandiData from "../data/mandiData.json"
+import agriData from "../data/agriInputsData.json"
 
 export default function MarketIntelligence() {
   const [data, setData] = useState([])
@@ -25,8 +26,8 @@ export default function MarketIntelligence() {
     loadData()
   }, [])
 
-  // 🔥 REAL TREND LOGIC (NOT RANDOM)
-  const processedTable = mandiData.map((item) => {
+  // 🔥 FOOD TABLE
+  const foodTable = mandiData.map((item) => {
     const trend =
       item.price > item.prevPrice1
         ? "UP"
@@ -39,13 +40,37 @@ export default function MarketIntelligence() {
     if (trend === "DOWN") recommendation = "BUY FROM HERE"
 
     return {
-      country: "India",
-      company: "Local Mandi",
-      product: item.commodity,
+      name: item.commodity,
+      type: "Crop",
       price: item.price,
       trend,
       recommendation,
-      source: "Multiple States",
+    }
+  })
+
+  // 🔥 CHEMICAL TABLE
+  const chemicalTable = agriData.map((item) => {
+    const latest = item.data[item.data.length - 1]
+    const prev = item.data[item.data.length - 2]
+
+    const trend =
+      latest.price > prev.price
+        ? "UP"
+        : latest.price < prev.price
+        ? "DOWN"
+        : "STABLE"
+
+    let recommendation = "HOLD"
+    if (trend === "UP") recommendation = "BUY BEFORE INCREASE"
+    if (trend === "DOWN") recommendation = "WAIT / BUY LATER"
+
+    return {
+      name: item.name,
+      type: item.category,
+      price: latest.price,
+      trend,
+      recommendation,
+      history: item.data,
     }
   })
 
@@ -56,44 +81,43 @@ export default function MarketIntelligence() {
         Market Intelligence 🚀
       </h2>
 
-      {/* FILTER (kept but not interfering) */}
+      {/* FILTER */}
       <select
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         className="border p-2 rounded"
       >
-        <option value="fertilizer">Fertilizer</option>
         <option value="food">Food Crops</option>
+        <option value="fertilizer">Fertilizers & Pesticides</option>
       </select>
 
       <div className="grid grid-cols-3 gap-6">
 
-        {/* LEFT: NEW TABLE */}
+        {/* LEFT: TABLE */}
         <div className="col-span-2 bg-white border rounded p-4">
           <h3 className="font-bold mb-2">Market Data</h3>
 
           <table className="w-full text-sm">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-2">Company</th>
-                <th className="p-2">Product</th>
+                <th className="p-2">Name</th>
+                <th className="p-2">Type</th>
                 <th className="p-2">Price (₹)</th>
                 <th className="p-2">Trend</th>
                 <th className="p-2">Action</th>
-                <th className="p-2">Buy From</th>
               </tr>
             </thead>
 
             <tbody>
-              {processedTable.map((item, i) => (
+              {(category === "food" ? foodTable : chemicalTable).map((item, i) => (
                 <tr key={i} className="border-t text-center">
 
                   <td className="p-2 font-semibold">
-                    {item.company}
+                    {item.name}
                   </td>
 
                   <td className="p-2">
-                    {item.product}
+                    {item.type}
                   </td>
 
                   <td className="p-2">
@@ -110,17 +134,33 @@ export default function MarketIntelligence() {
                     {item.recommendation}
                   </td>
 
-                  <td className="p-2 text-sm text-gray-600">
-                    {item.source}
-                  </td>
-
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {/* 🔥 GRAPH */}
+          {category === "fertilizer" && chemicalTable.length > 0 && (
+            <div className="mt-6">
+              <h3 className="font-bold mb-2">Price Trend (Last 4 Months)</h3>
+
+              <div className="flex items-end gap-2 h-40 border p-3">
+                {chemicalTable[0].history.map((d, i) => (
+                  <div key={i} className="flex flex-col items-center w-10">
+                    <div
+                      className="bg-blue-500 w-full"
+                      style={{ height: `${d.price / 20}px` }}
+                    ></div>
+                    <span className="text-xs">{d.month.slice(0, 3)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
 
-        {/* RIGHT: NEWS (UNCHANGED) */}
+        {/* RIGHT: NEWS */}
         <div className="bg-white border rounded p-4 h-[400px] overflow-y-auto">
           <h3 className="font-bold mb-3">Live Market News 📰</h3>
 

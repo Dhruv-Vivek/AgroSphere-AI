@@ -1,0 +1,114 @@
+[
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Wheat Leaf Rust (Puccinia triticina)",
+        "confidence": 88,
+        "description": "Orange-brown pustules on leaves; reduces photosynthetic area under humid conditions.",
+        "treatment": "Triazole or strobilurin fungicides at first detection; resistant cultivars next season; avoid excess N.",
+        "affected_crops": ["Wheat"],
+        "severity": "Medium",
+        "image_symptoms": "Orange pustules on wheat leaf blades with slight chlorotic halos."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Rice Blast (Magnaporthe oryzae)",
+        "confidence": 91,
+        "description": "Spindle-shaped lesions on leaves; neck blast can cause blank grains.",
+        "treatment": "Fungicides at booting; balanced split N; resistant varieties; avoid prolonged wet canopy.",
+        "affected_crops": ["Rice"],
+        "severity": "High",
+        "image_symptoms": "Gray-brown spindle spots with darker borders on rice foliage."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Tomato Early Blight (Alternaria solani)",
+        "confidence": 84,
+        "description": "Concentric ring lesions on older leaves; can affect stems and fruit in wet weather.",
+        "treatment": "Remove infected leaves; airflow; rotate; mancozeb/chlorothalonil or azoxystrobin programs.",
+        "affected_crops": ["Tomato", "Potato"],
+        "severity": "Medium",
+        "image_symptoms": "Dark target-like spots on lower tomato leaves with yellowing."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Potato Late Blight (Phytophthora infestans)",
+        "confidence": 93,
+        "description": "Water-soaked patches turning brown-black; sporulation on leaf undersides in cool humid nights.",
+        "treatment": "Protectant fungicides before favorable weather; certified seed; destroy culls.",
+        "affected_crops": ["Potato", "Tomato"],
+        "severity": "High",
+        "image_symptoms": "Greasy dark lesions with fuzzy sporulation along margins in morning humidity."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Cotton Bacterial Blight (Xanthomonas citri pv. malvacearum)",
+        "confidence": 79,
+        "description": "Angular water-soaked spots, vein blackening; spreads with rain splash.",
+        "treatment": "Certified acid-delinted seed; rotation; copper sprays early; avoid overhead irrigation.",
+        "affected_crops": ["Cotton"],
+        "severity": "Medium",
+        "image_symptoms": "Dark angular leaf spots bounded by veins on young cotton."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Sugarcane Red Rot",
+        "confidence": 86,
+        "description": "Internal stalk reddening with odor; wilting of clump in advanced stages.",
+        "treatment": "Healthy setts; rogue infected stools; drainage; resistant varieties.",
+        "affected_crops": ["Sugarcane"],
+        "severity": "High",
+        "image_symptoms": "Reddened vascular strands in sugarcane cross-section."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Mango Anthracnose (Colletotrichum spp.)",
+        "confidence": 90,
+        "description": "Dark lesions on leaves, flowers, young fruit; blossom blight in wet weather.",
+        "treatment": "Copper pre-flowering; prune for aeration; fungicides per local advisory.",
+        "affected_crops": ["Mango"],
+        "severity": "Medium",
+        "image_symptoms": "Blackish spots on mango leaves and inflorescence speckling."
+      }
+    ]
+  },
+  {
+    "is_healthy": false,
+    "results": [
+      {
+        "name": "Turmeric Rhizome Rot",
+        "confidence": 77,
+        "description": "Yellowing, wilting; soft brown rhizome decay worsened by waterlogging.",
+        "treatment": "Drainage, raised beds; Trichoderma + fungicide on seed rhizomes; rotation.",
+        "affected_crops": ["Turmeric", "Ginger"],
+        "severity": "High",
+        "image_symptoms": "Water-soaked brown rhizome scales; reduced fibrous roots."
+      }
+    ]
+  }
+]

@@ -1,16 +1,33 @@
-# React + Vite
+# AgroSphere AI 🌱
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Intelligent Agriculture Operating System
 
-Currently, two official plugins are available:
+## Team
+- Member 1 → Backend + APIs + Data
+- Member 2 → Dashboard + Market + Charts
+- Member 3 → Disease + Drone + Maps
+- Member 4 → Storage + Schemes + Chatbot
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Setup
 
-## React Compiler
+### Backend
+cd backend
+npm install
+cp .env.example .env   ← fill in your API keys
+npm run dev            ← runs on localhost:5000
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend
+cd frontend
+npm install
+npm run dev            ← runs on localhost:5173
 
-## Expanding the ESLint configuration
+## API Keys needed
+- OPENWEATHER_API_KEY → openweathermap.org (free)
+- PLANT_ID_API_KEY    → plant.id (free tier)
+- MAPBOX_TOKEN        → mapbox.com (free)
+- OPENAI_API_KEY      → optional, for chatbot
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Branch Strategy
+- main        → stable, demo-ready code only
+- dev         → merge all features here first
+- feat/your-name → each member works on their own branch

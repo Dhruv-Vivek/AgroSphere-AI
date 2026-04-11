@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { MitraChatProvider } from './context/MitraChatContext'
+import './App.css'
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
 import ChatBot from './components/ChatBot'
@@ -21,11 +22,11 @@ function AppLayout() {
 
   return (
     <>
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="app-shell flex min-h-screen bg-gray-50">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex min-w-0 flex-1 flex-col">
           <Navbar onOpenSidebar={() => setSidebarOpen(true)} />
-          <main className="flex-1 overflow-auto p-4 md:p-6">
+          <main className="app-main flex-1 overflow-auto p-4 md:p-6">
             <Outlet />
           </main>
         </div>

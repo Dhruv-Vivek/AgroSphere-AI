@@ -1,172 +1,113 @@
 import { useEffect, useState } from "react"
-import { fetchAnalysis, fetchPrices, fetchNews } from "../api/marketApi"
-import { analyzeNewsRisk, normalizeCountryLabel } from "../utils/riskAnalysis"
-import {
-  computePriceTrendDirection,
-  recommendFromTrendAndRisk,
-  explainRecommendation,
-  getRecommendationConfidence,
-} from "../utils/recommendationEngine"
+import { fetchPrices, fetchNews } from "../api/marketApi"
 
 export default function MarketIntelligence() {
   const [data, setData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
-  const [lastUpdated, setLastUpdated] = useState(null)
+  const [news, setNews] = useState([])
+  const [category, setCategory] = useState("fertilizer")
 
   const loadData = async () => {
     try {
-      setLoading(true)
-      setError("")
-
-      const [prices, news, analysis] = await Promise.all([
+      const [prices, newsData] = await Promise.all([
         fetchPrices(),
         fetchNews(),
-        fetchAnalysis(),
       ])
 
-      const riskProfile = analyzeNewsRisk(news || [])
-      const analysisCountries = Array.isArray(analysis?.countries) ? analysis.countries : []
-      const analysisRiskMap = analysisCountries.reduce((acc, item) => {
-        const key = normalizeCountryLabel(item?.country || "Global")
-        acc[key] = item?.riskLevel || acc[key] || "LOW"
-        return acc
-      }, {})
-
-      console.log("[MarketIntelligence] news data", news)
-      console.log("[MarketIntelligence] riskProfile", riskProfile)
-      console.log("[MarketIntelligence] analysis", analysis)
-
-      const processed = (prices || []).map((item) => {
-        const country = normalizeCountryLabel(item?.country || "Unknown")
-
-        const trend = computePriceTrendDirection(
-          item?.history || [{ price: item?.price }]
-        )
-
-        const risk =
-          analysisRiskMap[country] ||
-          riskProfile?.byCountry?.[country] ||
-          "LOW"
-
-        const recommendation = recommendFromTrendAndRisk({
-          trend,
-          riskLevel: risk,
-        })
-
-        const explanation = explainRecommendation({
-          trend,
-          riskLevel: risk,
-        })
-
-        const confidence = getRecommendationConfidence(
-          item?.history?.length || 1
-        )
-
-        return {
-          country,
-          price: Number(item?.price) || 0,
-          risk,
-          recommendation,
-          explanation,
-          confidence,
-        }
-      })
-
-      console.log("[MarketIntelligence] processed table data", processed)
-
-      setData(processed)
-      setLastUpdated(new Date())
+      setData(prices || [])
+      setNews(newsData || [])
     } catch (err) {
-      console.error("[MarketIntelligence] loadData failed", err)
-      setError(
-        err?.response?.data?.error ||
-          err?.userMessage ||
-          "Unable to fetch market data. Please ensure backend APIs are running."
-      )
-    } finally {
-      setLoading(false)
+      console.error(err)
     }
   }
 
   useEffect(() => {
     loadData()
-    const interval = setInterval(loadData, 900000) // 15 min
-    return () => clearInterval(interval)
   }, [])
 
-  // 🔄 STATES
-
-  if (loading)
-    return <div className="p-6">Loading market intelligence...</div>
-
-  if (error)
-    return <div className="p-6 text-red-500 font-medium">{error}</div>
+  const filteredData = data.filter(d => d.category === category)
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-bold text-gray-800">
-        Market Intelligence Dashboard
+    <div className="p-6 space-y-6">
+
+      <h2 className="text-2xl font-bold">
+        Market Intelligence 🚀
       </h2>
 
-      <p className="mt-2 text-sm text-gray-500">
-        Last updated: {lastUpdated?.toLocaleTimeString() || "—"}
-      </p>
+      {/* FILTER */}
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="border p-2 rounded"
+      >
+        <option value="fertilizer">Fertilizer</option>
+        <option value="food">Food Crops</option>
+      </select>
 
-      {data.length === 0 ? (
-        <p className="mt-4 text-gray-500">No data available</p>
-      ) : (
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full border text-sm">
-            <thead className="bg-gray-50">
+      <div className="grid grid-cols-3 gap-6">
+
+        {/* LEFT: TABLE */}
+        <div className="col-span-2 bg-white border rounded p-4">
+          <h3 className="font-bold mb-2">Market Data</h3>
+
+          <table className="w-full text-sm">
+            <thead className="bg-gray-100">
               <tr>
-                <th className="p-2">Country</th>
+                <th className="p-2">Product</th>
                 <th className="p-2">Price</th>
-                <th className="p-2">Risk</th>
-                <th className="p-2">Recommendation</th>
-                <th className="p-2">Confidence</th>
               </tr>
             </thead>
 
             <tbody>
-              {data.map((row, i) => (
-                <tr key={i} className="text-center border-t">
-                  <td className="p-2">{row.country}</td>
-                  <td className="p-2">{row.price}</td>
-
-                  <td
-                    className={`p-2 font-semibold ${
-                      row.risk === "HIGH"
-                        ? "text-red-500"
-                        : row.risk === "MEDIUM"
-                        ? "text-yellow-500"
-                        : "text-green-500"
-                    }`}
-                  >
-                    {row.risk}
-                  </td>
-
-                  <td
-                    className="p-2 font-semibold"
-                    title={row.explanation}
-                  >
-                    {row.recommendation}
-                  </td>
-
-                  <td className="p-2">{row.confidence}%</td>
+              {filteredData.map((item, i) => (
+                <tr key={i} className="border-t text-center">
+                  <td className="p-2">{item.product}</td>
+                  <td className="p-2">{item.price}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      )}
+
+        {/* RIGHT: NEWS */}
+        <div className="bg-white border rounded p-4 h-[400px] overflow-y-auto">
+          <h3 className="font-bold mb-3">Live Market News 📰</h3>
+
+          {news.map((item, i) => (
+            <div
+              key={i}
+              className="mb-3 p-2 border-b cursor-pointer hover:bg-gray-100"
+              onClick={() => window.open(item.url, "_blank")}
+            >
+              <p className="text-sm font-semibold">{item.title}</p>
+
+              <div className="flex justify-between text-xs mt-1">
+                <span>{item.country}</span>
+
+                <span
+                  className={
+                    item.riskLevel === "HIGH"
+                      ? "text-red-500"
+                      : item.riskLevel === "MEDIUM"
+                      ? "text-yellow-500"
+                      : "text-green-500"
+                  }
+                >
+                  {item.riskLevel}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
 
       <button
         onClick={loadData}
-        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded"
+        className="px-4 py-2 bg-blue-500 text-white rounded"
       >
         Refresh Data
       </button>
+
     </div>
   )
 }

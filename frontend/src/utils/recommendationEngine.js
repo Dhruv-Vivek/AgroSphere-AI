@@ -17,7 +17,13 @@ export function computePriceTrendDirection(series) {
   const pts = Array.isArray(series) ? series : []
 
   const prices = pts
-    .map((p) => Number(p?.price))
+    .map((p) => {
+      if (typeof p === 'number') return p
+      if (p && typeof p === 'object') {
+        return Number(p.price ?? p.value ?? p)
+      }
+      return Number(p)
+    })
     .filter((n) => Number.isFinite(n))
 
   if (prices.length < 2) return 'flat'

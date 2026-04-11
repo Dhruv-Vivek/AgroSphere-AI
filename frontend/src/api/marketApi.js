@@ -68,19 +68,27 @@ async function getWithRetry(urlPath, options = {}) {
   throw wrapped
 }
 
+function unwrapApiResponse(response) {
+  const payload = response?.data
+  if (payload && typeof payload === 'object' && payload.ok && payload.data !== undefined) {
+    return payload.data
+  }
+  return payload
+}
+
 /** @returns {Promise<unknown>} */
 export function fetchPrices(options = {}) {
-  return getWithRetry('/market/prices', options).then((r) => r.data)
+  return getWithRetry('/market/prices', options).then((r) => unwrapApiResponse(r))
 }
 
 /** @returns {Promise<unknown>} */
 export function fetchNews(options = {}) {
-  return getWithRetry('/market/news', options).then((r) => r.data)
+  return getWithRetry('/market/news', options).then((r) => unwrapApiResponse(r))
 }
 
 /** @returns {Promise<unknown>} */
 export function fetchAnalysis(options = {}) {
-  return getWithRetry('/market/analysis', options).then((r) => r.data)
+  return getWithRetry('/market/analysis', options).then((r) => unwrapApiResponse(r))
 }
 
 export { RESOLVED_BASE as MARKET_API_BASE_URL }

@@ -1,0 +1,138 @@
+[
+  {
+    "commodity": "Bajra",
+    "group": "Cereals",
+    "price": 1994.92,
+    "prevPrice1": 2195.38,
+    "prevPrice2": 2037.40,
+    "msp": 2775
+  },
+  {
+    "commodity": "Barley",
+    "group": "Cereals",
+    "price": 2076.13,
+    "prevPrice1": 2030.42,
+    "prevPrice2": 2071.67,
+    "msp": 2150
+  },
+  {
+    "commodity": "Jowar",
+    "group": "Cereals",
+    "price": 4460.16,
+    "prevPrice1": 3840.63,
+    "prevPrice2": 4043.42,
+    "msp": 3699
+  },
+  {
+    "commodity": "Maize",
+    "group": "Cereals",
+    "price": 1692.16,
+    "prevPrice1": 1659.03,
+    "prevPrice2": 1664.15,
+    "msp": 2400
+  },
+  {
+    "commodity": "Paddy",
+    "group": "Cereals",
+    "price": 2496.20,
+    "prevPrice1": 2394.28,
+    "prevPrice2": 2888.86,
+    "msp": 2369
+  },
+  {
+    "commodity": "Ragi",
+    "group": "Cereals",
+    "price": 3505.95,
+    "prevPrice1": 3469.37,
+    "prevPrice2": 3254.89,
+    "msp": 4886
+  },
+  {
+    "commodity": "Wheat",
+    "group": "Cereals",
+    "price": 2441.77,
+    "prevPrice1": 2405.02,
+    "prevPrice2": 2420.63,
+    "msp": 2585
+  },
+  {
+    "commodity": "Cotton",
+    "group": "Fibre Crops",
+    "price": 8440.53,
+    "prevPrice1": 8289.55,
+    "prevPrice2": 8314.12,
+    "msp": 7710
+  },
+  {
+    "commodity": "Groundnut",
+    "group": "Oil Seeds",
+    "price": 6913.60,
+    "prevPrice1": 7138.11,
+    "prevPrice2": 6899.83,
+    "msp": 7263
+  },
+  {
+    "commodity": "Mustard",
+    "group": "Oil Seeds",
+    "price": 6436.90,
+    "prevPrice1": 6236.81,
+    "prevPrice2": 6408.74,
+    "msp": 6200
+  },
+  {
+    "commodity": "Soyabean",
+    "group": "Oil Seeds",
+    "price": 5443.77,
+    "prevPrice1": 5440.94,
+    "prevPrice2": 5424.87,
+    "msp": 5328
+  },
+  {
+    "commodity": "Arhar",
+    "group": "Pulses",
+    "price": 7530.82,
+    "prevPrice1": 7498.33,
+    "prevPrice2": 7567.15,
+    "msp": 8000
+  },
+  {
+    "commodity": "Bengal Gram",
+    "group": "Pulses",
+    "price": 5358.41,
+    "prevPrice1": 5337.37,
+    "prevPrice2": 5329.16,
+    "msp": 5875
+  },
+  {
+    "commodity": "Moong",
+    "group": "Pulses",
+    "price": 7977.48,
+    "prevPrice1": 7509.67,
+    "prevPrice2": 8279.21,
+    "msp": 8768
+  },
+  {
+    "commodity": "Onion",
+    "group": "Vegetables",
+    "price": 1118.68,
+    "prevPrice1": 1114.02,
+    "prevPrice2": 1100.50,
+    "msp": null
+  },
+  {
+    "commodity": "Potato",
+    "group": "Vegetables",
+    "price": 585.13,
+    "prevPrice1": 601.69,
+    "prevPrice2": 562.80,
+    "msp": null
+  },
+  {
+    "commodity": "Tomato",
+    "group": "Vegetables",
+    "price": 1189.90,
+    "prevPrice1": 1274.60,
+    "prevPrice2": 1172.97,
+    "msp": null
+  }
+]

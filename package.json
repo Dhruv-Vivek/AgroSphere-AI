@@ -1,0 +1,11 @@
+{
+  "name": "agrosphere-ai",
+  "private": true,
+  "description": "Run scripts from repo root; app lives in AgroSphere-AI/frontend",
+  "scripts": {
+    "dev": "npm run dev --prefix AgroSphere-AI/frontend",
+    "build": "npm run build --prefix AgroSphere-AI/frontend",
+    "preview": "npm run preview --prefix AgroSphere-AI/frontend",
+    "lint": "npm run lint --prefix AgroSphere-AI/frontend"
+  }
+}

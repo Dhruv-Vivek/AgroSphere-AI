@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { fetchPrices, fetchNews } from "../api/marketApi"
-import { analyzeNewsRisk } from "../utils/riskAnalysis"
+import { fetchAnalysis, fetchPrices, fetchNews } from "../api/marketApi"
+import { analyzeNewsRisk, normalizeCountryLabel } from "../utils/riskAnalysis"
 import {
   computePriceTrendDirection,
   recommendFromTrendAndRisk,
@@ -19,21 +19,35 @@ export default function MarketIntelligence() {
       setLoading(true)
       setError("")
 
-      const [prices, news] = await Promise.all([
+      const [prices, news, analysis] = await Promise.all([
         fetchPrices(),
         fetchNews(),
+        fetchAnalysis(),
       ])
 
       const riskProfile = analyzeNewsRisk(news || [])
+      const analysisCountries = Array.isArray(analysis?.countries) ? analysis.countries : []
+      const analysisRiskMap = analysisCountries.reduce((acc, item) => {
+        const key = normalizeCountryLabel(item?.country || "Global")
+        acc[key] = item?.riskLevel || acc[key] || "LOW"
+        return acc
+      }, {})
+
+      console.log("[MarketIntelligence] news data", news)
+      console.log("[MarketIntelligence] riskProfile", riskProfile)
+      console.log("[MarketIntelligence] analysis", analysis)
 
       const processed = (prices || []).map((item) => {
-        const country = item?.country || "Unknown"
+        const country = normalizeCountryLabel(item?.country || "Unknown")
 
         const trend = computePriceTrendDirection(
           item?.history || [{ price: item?.price }]
         )
 
-        const risk = riskProfile?.byCountry?.[country] || "LOW"
+        const risk =
+          analysisRiskMap[country] ||
+          riskProfile?.byCountry?.[country] ||
+          "LOW"
 
         const recommendation = recommendFromTrendAndRisk({
           trend,
@@ -59,11 +73,16 @@ export default function MarketIntelligence() {
         }
       })
 
+      console.log("[MarketIntelligence] processed table data", processed)
+
       setData(processed)
       setLastUpdated(new Date())
     } catch (err) {
+      console.error("[MarketIntelligence] loadData failed", err)
       setError(
-        "Unable to fetch market data. Please ensure backend APIs are running."
+        err?.response?.data?.error ||
+          err?.userMessage ||
+          "Unable to fetch market data. Please ensure backend APIs are running."
       )
     } finally {
       setLoading(false)

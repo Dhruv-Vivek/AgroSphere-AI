@@ -4,27 +4,45 @@
  */
 
 /** Immediate escalation keywords */
-export const HIGH_SEVERITY_KEYWORDS = ['war', 'conflict']
+export const HIGH_SEVERITY_KEYWORDS = [
+  'war',
+  'conflict',
+  'missile',
+  'airstrike',
+  'military strike',
+]
 
 /** Elevated trade disruption keywords */
-export const MEDIUM_SEVERITY_KEYWORDS = ['sanctions', 'export ban', 'port closure']
+export const MEDIUM_SEVERITY_KEYWORDS = [
+  'sanctions',
+  'export ban',
+  'port closure',
+  'shipping delay',
+  'strait closure',
+  'shortage',
+  'volatility',
+  'supply shock',
+  'disruption',
+]
 
 /** Used to associate free-text with a geography when the API omits structured country fields */
 export const KNOWN_COUNTRY_ALIASES = [
-  { match: /\bunited states\b|\busa\b|\bu\.s\.a\.\b|\bu\.s\.\b/gi, label: 'United States' },
+  { match: /\bunited states\b|\busa\b|\bu\.s\.a\.\b|\bu\.s\.\b|\bus gulf\b/gi, label: 'United States' },
   { match: /\bunited kingdom\b|\buk\b|\bbritain\b|\bengland\b/gi, label: 'United Kingdom' },
   { match: /\beuropean union\b|\beu\b/gi, label: 'European Union' },
   { match: /\bindia\b/gi, label: 'India' },
   { match: /\bchina\b/gi, label: 'China' },
   { match: /\brussia\b/gi, label: 'Russia' },
-  { match: /\bukraine\b/gi, label: 'Ukraine' },
+  { match: /\bukraine\b|\bblack sea\b/gi, label: 'Ukraine' },
   { match: /\bbrazil\b/gi, label: 'Brazil' },
   { match: /\bcanada\b/gi, label: 'Canada' },
   { match: /\baustralia\b/gi, label: 'Australia' },
   { match: /\bsaudi arabia\b/gi, label: 'Saudi Arabia' },
   { match: /\biran\b/gi, label: 'Iran' },
   { match: /\bisrael\b/gi, label: 'Israel' },
-  { match: /\bturkey\b|\btürkiye\b/gi, label: 'Turkey' },
+  { match: /\bturkey\b|\btÃ¼rkiye\b/gi, label: 'Turkey' },
+  { match: /\bnorth africa\b|\bmorocco\b/gi, label: 'North Africa' },
+  { match: /\bmiddle east\b|\bpersian gulf\b|\bstrait of hormuz\b/gi, label: 'Middle East' },
   { match: /\bpakistan\b/gi, label: 'Pakistan' },
   { match: /\bbangladesh\b/gi, label: 'Bangladesh' },
   { match: /\bindonesia\b/gi, label: 'Indonesia' },
@@ -46,6 +64,27 @@ export const KNOWN_COUNTRY_ALIASES = [
 export function maxRisk(a, b) {
   const rank = { LOW: 0, MEDIUM: 1, HIGH: 2 }
   return rank[a] >= rank[b] ? a : b
+}
+
+/**
+ * @param {string} value
+ * @returns {string}
+ */
+export function normalizeCountryLabel(value) {
+  const raw = String(value || '').trim()
+  if (!raw) return 'Global'
+  return raw
+    .replace(/\busa\b/gi, 'United States')
+    .replace(/\bu\.s\.a\.\b/gi, 'United States')
+    .replace(/\bu\.s\.\b/gi, 'United States')
+    .replace(/\beu\b/gi, 'European Union')
+    .split(' ')
+    .map((word) => {
+      if (!word) return word
+      if (/^[A-Z]{2,}$/.test(word)) return word
+      return word[0].toUpperCase() + word.slice(1).toLowerCase()
+    })
+    .join(' ')
 }
 
 /**
@@ -103,11 +142,13 @@ function normalizeArticle(raw, index) {
   }
   const textBlob = `${title} ${body}`
   const inferred = inferCountriesFromText(textBlob)
-  const countries = [...new Set([...structuredCountries, ...inferred])]
+  const countries = [...new Set([...structuredCountries, ...inferred].map((c) => normalizeCountryLabel(c)))]
+  const explicitRisk =
+    typeof r.riskLevel === 'string' ? String(r.riskLevel).toUpperCase() : null
   const id =
     (typeof r.id === 'string' || typeof r.id === 'number' ? String(r.id) : null) ??
     `article-${index}`
-  return { id, title, body: body || title, countries, textBlob }
+  return { id, title, body: body || title, countries, textBlob, explicitRisk }
 }
 
 /**
@@ -120,7 +161,11 @@ export function riskForArticle(article) {
     return { countries: ['Global'], level: 'LOW', signals: [] }
   }
   const signals = extractKeywordSignals(article.textBlob)
-  let level = /** @type {RiskLevel} */ ('LOW')
+  let level = /** @type {RiskLevel} */ (
+    article.explicitRisk === 'HIGH' || article.explicitRisk === 'MEDIUM' || article.explicitRisk === 'LOW'
+      ? article.explicitRisk
+      : 'LOW'
+  )
   for (const s of signals) level = maxRisk(level, s.level)
   const countries = article.countries.length ? article.countries : ['Global']
   return { countries, level, signals }
@@ -146,10 +191,10 @@ export function analyzeNewsRisk(newsItems) {
     const { countries, level, signals } = riskForArticle(a)
     overall = maxRisk(overall, level)
     for (const c of countries) {
-      const key = c.trim() || 'Global'
+      const key = normalizeCountryLabel(c.trim() || 'Global')
       byCountry[key] = byCountry[key] ? maxRisk(byCountry[key], level) : level
     }
-    if (signals.length) {
+    if (signals.length || level !== 'LOW') {
       events.push({
         id: a.id,
         title: a.title,

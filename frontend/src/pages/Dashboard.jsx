@@ -102,7 +102,21 @@ export default function Dashboard() {
 
   useEffect(()=>{ void fetchStats();void fetchWeather();void fetchMarket();void fetchCropHealth() },[fetchStats,fetchWeather,fetchMarket,fetchCropHealth])
 
-  const chartData=useMemo(()=>({ labels:cropHealth.labels, datasets:[{label:'Health index',data:cropHealth.values,backgroundColor:'rgba(16,185,129,0.5)',borderColor:'rgba(5,150,105,0.9)',borderWidth:1,borderRadius:8,maxBarThickness:20}] }),[cropHealth])
+const chartData = useMemo(() => ({
+  labels: cropHealth.labels,
+  datasets: [
+    {
+      label: 'Health index',
+      data: cropHealth.values,
+      backgroundColor: 'rgba(16,185,129,0.5)',
+      borderColor: 'rgba(5,150,105,0.9)',
+      borderWidth: 1,
+      borderRadius: 8,
+      maxBarThickness: 20
+    }
+  ]
+}), [cropHealth.labels, cropHealth.values])
+
   const chartOptions=useMemo(()=>({ indexAxis:'y',responsive:true,maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{callbacks:{label:(ctx)=>`${ctx.parsed.x}% vitality`}}}, scales:{x:{min:0,max:100,grid:{color:'rgba(15,23,42,0.05)'},ticks:{color:'#475569',font:{size:11}}},y:{grid:{display:false},ticks:{color:'#1e293b',font:{size:12,weight:'600'}}}} }),[])
 
   const bentoItems=useMemo(()=>[
@@ -263,7 +277,7 @@ export default function Dashboard() {
         </div>
       </div>
     )},
-  ],[stats,statsLoading,weather,weatherLoading,marketRows,marketLoading,cropHealth,chartLoading,chartData,chartOptions,fetchCropHealth,fetchWeather,fetchMarket,navigate])
+  ],[stats, statsLoading, weather, weatherLoading, marketRows, marketLoading, chartLoading, chartData, chartOptions, fetchCropHealth, fetchWeather, fetchMarket, navigate])
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">

@@ -1,0 +1,140 @@
+{
+  "maize": {
+    "growth_stages": {
+      "germination": { "days": "0-10", "moisture_min": 60, "temp_range": [18, 32] },
+      "vegetative": { "days": "11-50", "moisture_min": 50, "N_demand": "high" },
+      "flowering": { "days": "51-80", "moisture_min": 60, "stress_sensitive": true },
+      "grain_fill": { "days": "81-110", "P_demand": "high", "K_demand": "high" },
+      "maturity": { "days": "111-120", "moisture_max": 40 }
+    },
+    "soil": {
+      "ph_min": 5.8,
+      "ph_max": 7.0,
+      "moisture_optimal_min": 50,
+      "moisture_optimal_max": 70,
+      "N_mg_kg": 120,
+      "P_mg_kg": 60,
+      "K_mg_kg": 80
+    },
+    "irrigation": {
+      "frequency_days": 7,
+      "water_per_acre_mm": 500
+    },
+    "yield": { "base_kg_per_acre": 3500, "max_kg_per_acre": 5000 }
+  },
+  "wheat": {
+    "growth_stages": {
+      "germination": { "days": "0-12", "moisture_min": 55, "temp_range": [12, 25] },
+      "vegetative": { "days": "13-60", "moisture_min": 45, "N_demand": "high" },
+      "reproductive": { "days": "61-100", "moisture_min": 50, "stress_sensitive": true },
+      "maturity": { "days": "101-120", "moisture_max": 35 }
+    },
+    "soil": {
+      "ph_min": 6.0,
+      "ph_max": 7.5,
+      "moisture_optimal_min": 45,
+      "moisture_optimal_max": 65,
+      "N_mg_kg": 100,
+      "P_mg_kg": 50,
+      "K_mg_kg": 50
+    },
+    "irrigation": { "frequency_days": 10, "water_per_acre_mm": 400 },
+    "yield": { "base_kg_per_acre": 3200, "max_kg_per_acre": 4500 }
+  },
+  "rice": {
+    "growth_stages": {
+      "nursery": { "days": "0-25", "moisture_min": 80, "temp_range": [24, 32] },
+      "vegetative": { "days": "26-70", "moisture_min": 75, "N_demand": "high" },
+      "reproductive": { "days": "71-100", "moisture_min": 70 },
+      "maturity": { "days": "101-120", "moisture_max": 45 }
+    },
+    "soil": {
+      "ph_min": 5.5,
+      "ph_max": 6.5,
+      "moisture_optimal_min": 70,
+      "moisture_optimal_max": 95,
+      "N_mg_kg": 90,
+      "P_mg_kg": 40,
+      "K_mg_kg": 40
+    },
+    "irrigation": { "frequency_days": 3, "water_per_acre_mm": 900 },
+    "yield": { "base_kg_per_acre": 2800, "max_kg_per_acre": 4200 }
+  },
+  "cotton": {
+    "growth_stages": {
+      "germination": { "days": "0-15", "moisture_min": 55, "temp_range": [20, 35] },
+      "vegetative": { "days": "16-70", "moisture_min": 45 },
+      "flowering": { "days": "71-120", "moisture_min": 50, "stress_sensitive": true },
+      "boll": { "days": "121-160", "K_demand": "high" },
+      "maturity": { "days": "161-180", "moisture_max": 40 }
+    },
+    "soil": {
+      "ph_min": 6.0,
+      "ph_max": 8.0,
+      "moisture_optimal_min": 45,
+      "moisture_optimal_max": 70,
+      "N_mg_kg": 80,
+      "P_mg_kg": 45,
+      "K_mg_kg": 90
+    },
+    "irrigation": { "frequency_days": 8, "water_per_acre_mm": 550 },
+    "yield": { "base_kg_per_acre": 600, "max_kg_per_acre": 900 }
+  },
+  "sugarcane": {
+    "growth_stages": {
+      "germination": { "days": "0-45", "moisture_min": 60 },
+      "grand_growth": { "days": "46-270", "moisture_min": 55, "N_demand": "high" },
+      "maturity": { "days": "271-365", "moisture_max": 50 }
+    },
+    "soil": {
+      "ph_min": 6.0,
+      "ph_max": 7.5,
+      "moisture_optimal_min": 50,
+      "moisture_optimal_max": 75,
+      "N_mg_kg": 150,
+      "P_mg_kg": 50,
+      "K_mg_kg": 100
+    },
+    "irrigation": { "frequency_days": 10, "water_per_acre_mm": 800 },
+    "yield": { "base_kg_per_acre": 35000, "max_kg_per_acre": 45000 }
+  },
+  "tomato": {
+    "growth_stages": {
+      "germination": { "days": "0-10", "moisture_min": 60 },
+      "vegetative": { "days": "11-40", "moisture_min": 55 },
+      "flowering": { "days": "41-70", "moisture_min": 60, "stress_sensitive": true },
+      "fruiting": { "days": "71-110", "K_demand": "high" },
+      "harvest": { "days": "111-130", "moisture_max": 45 }
+    },
+    "soil": {
+      "ph_min": 6.0,
+      "ph_max": 6.8,
+      "moisture_optimal_min": 55,
+      "moisture_optimal_max": 75,
+      "N_mg_kg": 100,
+      "P_mg_kg": 60,
+      "K_mg_kg": 120
+    },
+    "irrigation": { "frequency_days": 2, "water_per_acre_mm": 350 },
+    "yield": { "base_kg_per_acre": 20000, "max_kg_per_acre": 28000 }
+  },
+  "onion": {
+    "growth_stages": {
+      "germination": { "days": "0-15", "moisture_min": 55 },
+      "vegetative": { "days": "16-80", "moisture_min": 50 },
+      "bulb": { "days": "81-120", "moisture_min": 45, "K_demand": "high" },
+      "maturity": { "days": "121-140", "moisture_max": 35 }
+    },
+    "soil": {
+      "ph_min": 6.0,
+      "ph_max": 7.0,
+      "moisture_optimal_min": 45,
+      "moisture_optimal_max": 65,
+      "N_mg_kg": 80,
+      "P_mg_kg": 40,
+      "K_mg_kg": 80
+    },
+    "irrigation": { "frequency_days": 5, "water_per_acre_mm": 300 },
+    "yield": { "base_kg_per_acre": 12000, "max_kg_per_acre": 18000 }
+  }
+}

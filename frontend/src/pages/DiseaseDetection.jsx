@@ -13,67 +13,9 @@ import {
   X,
 } from 'lucide-react'
 
-// Using Plant.id API for real disease detection (configure VITE_PLANT_ID_API_KEY in .env).
+import api from '../api/axios'
 
-const PLANT_ID_HEALTH_URL = 'https://api.plant.id/v2/health_assessment'
-
-/** When Plant.id `disease_details` omits text, fill from this table (key = lowercase substring match on disease name). */
-const TREATMENT_DB = {
-  __default: {
-    description:
-      'No clinical description was returned. Compare your specimen with trusted extension guides or consult a plant pathologist for confirmation.',
-    treatment:
-      '🌿 Biological: Not specified in API response — use labeled biocontrols per local extension.\n🧪 Chemical: Not specified — follow label and pre-harvest intervals for your crop.\n🛡️ Prevention: Remove infected debris, improve airflow, avoid prolonged leaf wetness, and rotate hosts where applicable.',
-  },
-  blight: {
-    description:
-      'Late blight and related blights spread rapidly under cool, humid conditions; lesions often appear water-soaked and expand quickly.',
-    treatment:
-      '🌿 Biological: Bacillus-based products where labeled for your crop.\n🧪 Chemical: Protectant fungicides (e.g. mancozeb) per label; add systemic where resistance management allows.\n🛡️ Prevention: Destroy cull piles, ventilate tunnels/greenhouses, and irrigate at soil level.',
-  },
-  rust: {
-    description:
-      'Rust fungi produce orange to brown pustules on leaves; spores spread by wind and splashing water.',
-    treatment:
-      '🌿 Biological: Sulfur or approved biologicals if compatible with your crop stage.\n🧪 Chemical: Triazole/strobilurin programs per local resistance guidelines.\n🛡️ Prevention: Avoid overhead irrigation; remove heavily infected leaves early in the season.',
-  },
-  mildew: {
-    description:
-      'Powdery mildew shows white talcum-like growth on leaves; favored by warm days and cool nights with poor airflow.',
-    treatment:
-      '🌿 Biological: Potassium bicarbonate or registered biofungicides per label.\n🧪 Chemical: Sulfur, horticultural oils, or systemic DMIs where permitted.\n🛡️ Prevention: Increase spacing and prune for air movement; avoid excess nitrogen.',
-  },
-}
-
-function treatmentDbEntryForName(diseaseName) {
-  const n = (diseaseName || '').toLowerCase()
-  const key = Object.keys(TREATMENT_DB).find((k) => k !== '__default' && n.includes(k))
-  return TREATMENT_DB[key] || TREATMENT_DB.__default
-}
-
-/** Plant.id returns `treatment` as { biological, chemical, prevention } string arrays. */
-function formatTreatmentFromApi(treatment) {
-  if (!treatment || typeof treatment !== 'object') return ''
-  const parts = []
-  const bio = treatment.biological
-  const chem = treatment.chemical
-  const prev = treatment.prevention
-  if (Array.isArray(bio) && bio.length) {
-    parts.push(`🌿 Biological: ${bio.map(String).join(', ')}`)
-  }
-  if (Array.isArray(chem) && chem.length) {
-    parts.push(`🧪 Chemical: ${chem.map(String).join(', ')}`)
-  }
-  if (Array.isArray(prev) && prev.length) {
-    parts.push(`🛡️ Prevention: ${prev.map(String).join(', ')}`)
-  }
-  return parts.join('\n')
-}
-
-function normalizeCommonNames(raw) {
-  if (!Array.isArray(raw) || !raw.length) return []
-  return raw.map((x) => (typeof x === 'string' ? x : x?.name || String(x))).filter(Boolean)
-}
+// Vision analysis runs on the backend using Google Gemini (free tier — set GEMINI_API_KEY in backend/.env).
 
 const ACCEPT_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 const ACCEPT_EXT = /\.(jpe?g|png)$/i
@@ -82,24 +24,6 @@ function isAcceptedImage(file) {
   if (!file) return false
   if (ACCEPT_TYPES.includes(file.type)) return true
   return ACCEPT_EXT.test(file.name || '')
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      const dataUrl = reader.result
-      if (typeof dataUrl !== 'string') {
-        reject(new Error('Invalid file read result'))
-        return
-      }
-      const base64 = dataUrl.split(',')[1]
-      if (!base64) reject(new Error('Could not extract base64 payload'))
-      else resolve(base64)
-    }
-    reader.onerror = () => reject(reader.error || new Error('File read failed'))
-  })
 }
 
 /** Map API / mock item into a single result shape. */
@@ -117,6 +41,8 @@ function normalizeResult(raw) {
     : Array.isArray(raw.crops)
       ? raw.crops
       : []
+  const image_symptoms =
+    typeof raw.image_symptoms === 'string' ? raw.image_symptoms.trim() : ''
   return {
     name,
     confidence: Number.isFinite(confidence) ? confidence : 0,
@@ -124,47 +50,8 @@ function normalizeResult(raw) {
     treatment,
     severity,
     affected_crops,
+    image_symptoms,
   }
-}
-
-function makeOfflineDiagnosis() {
-  const candidate = [
-    {
-      name: 'Rust',
-      severity: 'Medium',
-      confidence: 72,
-      description:
-        'Typical leaf rust signs include small, powdery pustules on the undersides of leaves and yellow halos on the upper surface.',
-      treatment: `🌿 Biological: Use sulfur-based biocontrols where labeled for your crop.
-🧪 Chemical: Apply fungicides with rust activity, rotating modes of action.
-🛡️ Prevention: Improve airflow and avoid wet foliage.`,
-      affected_crops: ['Wheat', 'Barley', 'Soybean'],
-    },
-    {
-      name: 'Powdery Mildew',
-      severity: 'Medium',
-      confidence: 68,
-      description:
-        'White powdery fungal growth on leaf surfaces. Common in humid, low-airflow conditions.',
-      treatment: `🌿 Biological: Potassium bicarbonate sprays.
-🧪 Chemical: Apply registered sulfur or DMI fungicides.
-🛡️ Prevention: Increase spacing and airflow.`,
-      affected_crops: ['Grapevine', 'Cucumber', 'Tomato'],
-    },
-    {
-      name: 'Early Blight',
-      severity: 'High',
-      confidence: 81,
-      description:
-        'Concentric brown lesions on leaves and stems, often with a target-like pattern, consistent with early blight.',
-      treatment: `🌿 Biological: Use compost teas and Bacillus-based sprays.
-🧪 Chemical: Apply strobilurin or DMI fungicides as labeled.
-🛡️ Prevention: Rotate crops and remove infected debris.`,
-      affected_crops: ['Tomato', 'Potato'],
-    },
-  ]
-  const index = Math.floor(Math.random() * candidate.length)
-  return normalizeResult(candidate[index])
 }
 
 function confidenceBarClass(pct) {
@@ -356,57 +243,9 @@ export default function DiseaseDetection() {
     setUsedFallback(false)
   }
 
-  function cleanTreatment(rawTreatment) {
-    if (!rawTreatment || typeof rawTreatment !== 'object') return null
-
-    const REMOVE_PHRASES = [
-      'wash hands', 'wash your hands', 'household trash',
-      'do not compost', 'clean and disinfect tools', 'disinfect tools',
-      'avoid overcrowding', 'staking or trellising', 'row covers',
-      'rain shelters', 'refrigerate', 'harvest promptly',
-      'mummified fruit', 'pollinators', 'full bloom',
-      'pots between', 'stakes and pots', 'quarantine and inspect'
-    ]
-
-    function filterItems(arr) {
-      if (!Array.isArray(arr)) return []
-      return arr
-        .filter(item => !REMOVE_PHRASES.some(p => item.toLowerCase().includes(p)))
-        .slice(0, 3)
-        .map(item => item.length > 120 ? item.slice(0, 120).replace(/\s\S+$/, '') + '.' : item)
-    }
-
-    const parts = []
-    const bio = filterItems(rawTreatment.biological)
-    const chem = filterItems(rawTreatment.chemical)
-    const prev = filterItems(rawTreatment.prevention)
-
-    if (bio.length) parts.push('🌿 Biological:\n' + bio.map(i => `• ${i}`).join('\n'))
-    if (chem.length) parts.push('🧪 Chemical:\n' + chem.map(i => `• ${i}`).join('\n'))
-    if (prev.length) parts.push('🛡️ Prevention:\n' + prev.map(i => `• ${i}`).join('\n'))
-
-    return parts.join('\n\n') || null
-  }
-
   const analyze = async () => {
     if (!file) {
       setErrorMsg('Attach a leaf image before running analysis.')
-      return
-    }
-
-    const apiKey = import.meta.env.VITE_PLANT_ID_API_KEY?.trim()
-    if (!apiKey) {
-      setErrorMsg(null)
-      setUsedFallback(true)
-      setLoading(true)
-      setResult(null)
-      setHealthy(false)
-
-      // Simulate a local offline diagnosis when no API key is configured.
-      window.setTimeout(() => {
-        setResult(makeOfflineDiagnosis())
-        setLoading(false)
-      }, 750)
       return
     }
 
@@ -417,90 +256,65 @@ export default function DiseaseDetection() {
     setUsedFallback(false)
 
     try {
-      const base64Image = await fileToBase64(file)
+      const fd = new FormData()
+      fd.append('image', file)
 
-      const response = await fetch(PLANT_ID_HEALTH_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Api-Key': apiKey,
-        },
-        body: JSON.stringify({
-          images: [base64Image],
-          modifiers: ['similar_images'],
-          disease_details: ['description', 'treatment', 'common_names', 'cause'],
-        }),
+      const { data } = await api.post('/disease/analyze', fd, {
+        headers: { 'Content-Type': false },
+        timeout: 90000,
       })
 
-      const data = await response.json().catch(() => ({}))
-
-      if (!response.ok) {
-        const detail =
-          data?.message ||
-          data?.error ||
-          (Array.isArray(data?.suggestions) ? data.suggestions.join(' ') : null) ||
-          `HTTP ${response.status}`
-        setErrorMsg(`Plant.id request failed: ${detail}. Please try again with a clear image.`)
+      if (!data?.ok) {
+        setErrorMsg(
+          typeof data?.error === 'string'
+            ? data.error
+            : 'Analysis is unavailable. Check that the backend is running and GEMINI_API_KEY is set.',
+        )
+        setUsedFallback(Boolean(data?.fallback))
         return
       }
 
-      const health = data.health_assessment
-      if (!health || typeof health !== 'object') {
-        setErrorMsg('Unexpected response from Plant.id. Please try again with a clear image.')
+      const payload = data.data
+      if (!payload || typeof payload !== 'object') {
+        setErrorMsg('Unexpected response from server.')
         return
       }
 
-      if (health.is_healthy === true || health.is_healthy === 'true') {
+      setUsedFallback(Boolean(data.fallback))
+
+      if (payload.is_healthy) {
         setHealthy(true)
         setResult(null)
         return
       }
 
-      const disease = health.diseases?.[0]
-      if (!disease) {
-        setHealthy(true)
-        setResult(null)
+      const rows = Array.isArray(payload.results) ? payload.results : []
+      if (rows.length === 0) {
+        const edge = String(payload.edge_case || 'normal').replace(/_/g, ' ')
+        setErrorMsg(
+          payload.edge_case && payload.edge_case !== 'normal'
+            ? `Could not complete a disease scan (${edge}). Try a closer, well-lit leaf photo.`
+            : 'No diagnosis returned. Try a clearer image focused on symptoms.',
+        )
         return
       }
 
-      const prob =
-        typeof disease.probability === 'number'
-          ? disease.probability
-          : Number(disease.probability) || 0
-      const confidencePct = prob <= 1 ? prob * 100 : prob
-
-      const details = disease.disease_details || {}
-      const diseaseName = disease.name || 'Unknown disease'
-      const fb = treatmentDbEntryForName(diseaseName)
-
-      let description = (details.description || '').trim()
-      if (!description && details.cause) {
-        description = String(details.cause).trim()
-      }
-      if (!description) {
-        description = fb.description
-      }
-
-      const rawTreatment = disease.disease_details?.treatment
-      const cleaned = cleanTreatment(rawTreatment)
-      const treatment = cleaned || fb.treatment
-
-      const affected_crops = normalizeCommonNames(details.common_names)
-
-      const resultObj = {
-        name: diseaseName,
-        confidence: confidencePct,
-        description,
-        treatment,
-        severity: disease.severity || 'Medium',
-        affected_crops,
-      }
-
+      const row = rows[0]
+      const edge = payload.edge_case || 'normal'
+      const prefix =
+        edge !== 'normal' ? `[${String(edge).replace(/_/g, ' ')}] ` : ''
       setHealthy(false)
-      setResult(normalizeResult(resultObj))
+      setResult(
+        normalizeResult({
+          ...row,
+          description: row.description
+            ? `${prefix}${row.description}`
+            : `${prefix}See treatment notes below.`,
+        }),
+      )
     } catch (err) {
-      console.warn('[DiseaseDetection] Plant.id error:', err)
-      setErrorMsg('API failed. Please try again with a clear image.')
+      console.warn('[DiseaseDetection] analyze error:', err)
+      setErrorMsg(err.userMessage || err.message || 'Could not analyze image.')
       setHealthy(false)
       setResult(null)
     } finally {
@@ -552,7 +366,7 @@ export default function DiseaseDetection() {
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                   Endpoint
                 </p>
-                <p className="font-mono text-xs text-emerald-800">POST /api/disease/detect</p>
+                <p className="font-mono text-xs text-emerald-800">POST /api/disease/analyze</p>
               </div>
             </div>
           </header>
@@ -686,7 +500,7 @@ export default function DiseaseDetection() {
                 </span>
                 {usedFallback && (
                   <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-semibold text-amber-900 ring-1 ring-amber-200">
-                    Offline diagnostic (mock)
+                    Limited / fallback response
                   </span>
                 )}
               </div>
@@ -741,10 +555,15 @@ export default function DiseaseDetection() {
                 )}
 
                 {!loading && !healthy && result && (
-                  <div className={`slide-up border-l-4 ${result.severity === 'high' ? 'border-l-red-500' :
-                      result.severity === 'low' ? 'border-l-emerald-500' :
-                        'border-l-amber-500'
-                    } bg-white shadow-lg rounded-xl overflow-hidden`}>
+                  <div
+                    className={`slide-up border-l-4 ${
+                      String(result.severity).toLowerCase() === 'high'
+                        ? 'border-l-red-500'
+                        : String(result.severity).toLowerCase() === 'low'
+                          ? 'border-l-emerald-500'
+                          : 'border-l-amber-500'
+                    } bg-white shadow-lg rounded-xl overflow-hidden`}
+                  >
                     <div className="space-y-0 divide-y divide-slate-100 p-6 md:p-8">
                       <div className="pb-6">
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -804,6 +623,12 @@ export default function DiseaseDetection() {
                           Clinical description
                         </p>
                         <p className="text-sm leading-relaxed text-slate-700 transition-all duration-200 hover:text-slate-900">{result.description}</p>
+                        {result.image_symptoms ? (
+                          <p className="mt-3 text-xs leading-relaxed text-slate-600">
+                            <span className="font-semibold text-slate-700">Visible in image: </span>
+                            {result.image_symptoms}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="pt-6 stagger-fade" style={{ animationDelay: '300ms' }}>
@@ -843,4 +668,3 @@ export default function DiseaseDetection() {
     </>
   )
 }
-console.log("HELLO TEST");

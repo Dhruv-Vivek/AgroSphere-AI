@@ -7,5 +7,11 @@
     "build": "npm run build --prefix AgroSphere-AI/frontend",
     "preview": "npm run preview --prefix AgroSphere-AI/frontend",
     "lint": "npm run lint --prefix AgroSphere-AI/frontend"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
   }
 }

@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
-require("dotenv").config();
 
 const router = express.Router();
 const pricesPath = path.join(__dirname, "..", "data", "market_prices.json");

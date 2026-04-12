@@ -12,11 +12,14 @@ import {
   Satellite,
   Leaf,
   Settings,
+  Brain,
 } from 'lucide-react'
+import { useApiStatus } from '../context/ApiStatusContext'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/farm', label: 'Farm', icon: Sprout },
+  { to: '/ai-brain', label: 'AI Brain', icon: Brain },
   { to: '/disease', label: 'Disease', icon: Microscope },
   { to: '/drone', label: 'Drone', icon: Navigation },
   { to: '/market', label: 'Market', icon: TrendingUp },
@@ -26,6 +29,23 @@ const nav = [
   { to: '/traceability', label: 'Traceability', icon: QrCode },
   { to: '/remote-sensing', label: 'Remote Sensing', icon: Satellite },
 ]
+
+function ApiStatusIndicators() {
+  const { apiStatus } = useApiStatus()
+  if (!apiStatus.checked) return null
+  return (
+    <div className="px-3 py-2 text-xs space-y-1">
+      <div className={`flex items-center gap-2 ${apiStatus.groq ? 'text-green-400' : 'text-gray-600'}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${apiStatus.groq ? 'bg-green-400' : 'bg-gray-600'}`} />
+        Groq AI {apiStatus.groq ? 'connected' : 'offline'}
+      </div>
+      <div className={`flex items-center gap-2 ${apiStatus.gemini ? 'text-green-400' : 'text-gray-600'}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${apiStatus.gemini ? 'bg-green-400' : 'bg-gray-600'}`} />
+        Gemini AI {apiStatus.gemini ? 'connected' : 'offline'}
+      </div>
+    </div>
+  )
+}
 
 export default function Sidebar({ open, onClose }) {
   return (
@@ -89,6 +109,7 @@ export default function Sidebar({ open, onClose }) {
               Demo Mode
             </span>
           </div>
+          <ApiStatusIndicators />
         </div>
       </aside>
     </>

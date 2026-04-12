@@ -12,6 +12,7 @@ const titles = {
   '/schemes': 'Government Schemes',
   '/traceability': 'Traceability',
   '/remote-sensing': 'Remote Sensing',
+  '/ai-brain': 'AI Brain',
 }
 
 export default function Navbar({ onOpenSidebar = () => {} }) {

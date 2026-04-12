@@ -17,8 +17,19 @@ import api from '../api/axios'
 import { useMitraChat } from '../context/MitraChatContext'
 import { LANG_STORAGE_KEY, MITRA_LANGUAGES } from '../data/chatLanguages'
 
-const BOT_NAME = 'Mitra'
-const BOT_TAGLINE = 'Your AgroSphere assistant'
+const BOT_NAME = 'Krishi'
+const BOT_TAGLINE = 'Your AgroSphere farm advisor'
+
+const FARM_QUICK_QUESTIONS = [
+  'Give me a full farm summary right now',
+  'Which zone needs the most urgent attention?',
+  'Should I run the borewell today?',
+  "What's my maize yield looking like?",
+  'Any disease risk in my crops?',
+  'What fertilizer do I apply this week?',
+  'When is harvest time for each zone?',
+  'Explain the latest alert',
+]
 
 function getRecognitionCtor() {
   if (typeof window === 'undefined') return null
@@ -101,6 +112,9 @@ export default function ChatBot() {
   )
 
   const suggestions = useMemo(() => {
+    if (pathname.startsWith('/ai-brain')) {
+      return FARM_QUICK_QUESTIONS
+    }
     if (pathname.startsWith('/schemes')) {
       return [
         'How do I apply for PM-KISAN step by step?',
@@ -129,12 +143,15 @@ export default function ChatBot() {
       route: pathname,
       app: 'AgroSphere AI',
       assistant: BOT_NAME,
+      farmId: 'demo',
       replyLanguage,
       focus: pathname.startsWith('/schemes')
         ? 'government_scheme_application_guidance'
         : pathname.startsWith('/storage')
           ? 'cold_storage_and_shelf_life'
-          : 'general',
+          : pathname.startsWith('/ai-brain')
+            ? 'farm_decision_support_zones_irrigation'
+            : 'general',
     }),
     [pathname, replyLanguage]
   )
@@ -173,14 +190,15 @@ export default function ChatBot() {
         })
         setSessionId(data.sessionId)
         const reply = data.reply
-        setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
+        const source = data.source || 'unknown'
+        setMessages((prev) => [...prev, { role: 'assistant', content: reply, source }])
         if (autoSpeak || fromVoice) speakText(reply)
       } catch (err) {
         const msg = err.userMessage || err.message || 'Could not reach assistant'
         toast.error(msg)
         const fallback =
           'Sorry — I could not reach the server. Is the backend running on port 5000?'
-        setMessages((prev) => [...prev, { role: 'assistant', content: fallback }])
+        setMessages((prev) => [...prev, { role: 'assistant', content: fallback, source: 'error' }])
       } finally {
         setSending(false)
       }
@@ -383,10 +401,9 @@ export default function ChatBot() {
                     <Sparkles className="h-4 w-4" aria-hidden />
                   </div>
                   <p className="text-sm leading-relaxed text-gray-600">
-                    I can walk you through <strong className="text-gray-800">government scheme</strong>{' '}
-                    applications (documents, official portals, CSCs),{' '}
-                    <strong className="text-gray-800">cold storage</strong>, and traceability. Choose your
-                    language above, then type, tap a suggestion, or use the mic.
+                    With <strong className="text-gray-800">live farm context</strong> (demo Sharma Farm
+                    zones, sensors, alerts), I can advise on irrigation, soil, yield, and risks. I also help
+                    with <strong className="text-gray-800">schemes</strong>, <strong className="text-gray-800">cold storage</strong>, and traceability. Pick a language, then type, tap a chip, or use the mic.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -422,6 +439,16 @@ export default function ChatBot() {
                   }`}
                 >
                   {m.content}
+                  {m.role === 'assistant' && m.source && (
+                    <span className={`text-xs opacity-60 mt-1 block ${
+                      m.source === 'cached' ? 'text-amber-500' :
+                      m.source === 'error'  ? 'text-red-500' : 'text-green-500'
+                    }`}>
+                      {m.source === 'groq'   ? '\u26A1 Groq' :
+                       m.source === 'gemini' ? '\u2726 Gemini' :
+                       m.source === 'error'  ? '\u2717 Error' : '\u25CB Cached'}
+                    </span>
+                  )}
                   {m.role === 'assistant' && (
                     <button
                       type="button"

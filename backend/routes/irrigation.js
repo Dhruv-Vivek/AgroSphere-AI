@@ -87,12 +87,12 @@ router.get("/advice", async (req, res) => {
   const avgPop = next.length ? next.reduce((s, x) => s + (x.pop || 0), 0) / next.length : 0;
   const rainLikely = avgPop > 0.45;
 
-  let suggestion = "Maintain normal schedule; monitor soil moisture at 15–20 cm depth.";
-  if (rainLikely) suggestion = "Rain likely in next 24–48h — delay irrigation; check drainage.";
-  else if (avgPop < 0.2) suggestion = "Low rain probability — irrigate if tensiometer/feel test indicates dry soil.";
+  let suggestion = "Maintain normal schedule; monitor soil moisture at 15-20 cm depth.";
+  if (rainLikely) suggestion = "Rain likely in next 24-48h - delay irrigation and check drainage.";
+  else if (avgPop < 0.2) suggestion = "Low rain probability - irrigate if soil inspection confirms dryness.";
 
-  if (crop?.water_requirement === "High") suggestion += " High water crop: shorten interval if no rain.";
-  if (crop?.water_requirement === "Low") suggestion += " Lower water need: avoid over-irrigation.";
+  if (crop?.water_requirement === "High") suggestion += " High water crop: shorten the irrigation interval if no rain arrives.";
+  if (crop?.water_requirement === "Low") suggestion += " Lower water need: avoid over-irrigation and standing water.";
 
   res.json({
     ok: true,
@@ -103,6 +103,8 @@ router.get("/advice", async (req, res) => {
             name: crop.name,
             water_requirement: crop.water_requirement,
             irrigation_schedule: crop.irrigation_schedule,
+            rainfall_min: crop.rainfall_min,
+            rainfall_max: crop.rainfall_max,
           }
         : null,
       weather_hint: { avg_precip_probability_24h: Number(avgPop.toFixed(2)), rain_likely: rainLikely },

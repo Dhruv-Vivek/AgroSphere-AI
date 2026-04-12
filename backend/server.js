@@ -1,6 +1,7 @@
-require("dotenv").config();
-const express = require("express");
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+const express = require("express");
 const cors = require("cors");
 
 const app = express();
@@ -13,7 +14,9 @@ app.use(
     extended: true,
   })
 );
+const farmRoutes = require("./routes/farmIntel")
 
+app.use("/api/farm", farmRoutes)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
@@ -26,7 +29,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/chatbot", require("./routes/chatbot"));
 app.use("/api/farm-intel", require("./routes/farmIntel"));
-app.use("/api/market", require("./routes/market"));
+app.use("/api/market", require("./routes/marketRoutes"));
 app.use("/api/disease", require("./routes/disease"));
 app.use("/api/drone", require("./routes/drone"));
 app.use("/api/irrigation", require("./routes/irrigation"));

@@ -88,7 +88,7 @@ router.get("/weather", async (req, res) => {
       ok: true,
       data: { ...MOCK_WEATHER, coord: { lat, lon } },
       fallback: true,
-      message: "OPENWEATHER_API_KEY missing — mock data",
+      message: "OPENWEATHER_API_KEY missing - mock data",
     });
   }
 
@@ -106,7 +106,7 @@ router.get("/weather", async (req, res) => {
       data: {
         ...MOCK_WEATHER,
         coord: { lat, lon },
-        note: "OpenWeather request failed — mock fallback",
+        note: "OpenWeather request failed - mock fallback",
       },
       fallback: true,
     });

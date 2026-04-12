@@ -742,8 +742,8 @@ export default function DiseaseDetection() {
 
                 {!loading && !healthy && result && (
                   <div className={`slide-up border-l-4 ${result.severity === 'high' ? 'border-l-red-500' :
-                      result.severity === 'low' ? 'border-l-emerald-500' :
-                        'border-l-amber-500'
+                    result.severity === 'low' ? 'border-l-emerald-500' :
+                      'border-l-amber-500'
                     } bg-white shadow-lg rounded-xl overflow-hidden`}>
                     <div className="space-y-0 divide-y divide-slate-100 p-6 md:p-8">
                       <div className="pb-6">

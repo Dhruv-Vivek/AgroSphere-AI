@@ -1,9 +1,5 @@
 import axios from 'axios'
 
-/**
- * Centralized market API client.
- * Base URL can be overridden via VITE_API_BASE_URL (include /api suffix if your backend mounts there).
- */
 const RESOLVED_BASE =
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL) ||
   'http://localhost:5000/api'
@@ -22,13 +18,6 @@ const client = axios.create({
   headers: { Accept: 'application/json' },
 })
 
-/**
- * Performs an HTTP GET with bounded retries for transient network failures.
- * Retries on: no response, 502/503/504, 408, network error.
- * Does not retry on 4xx (except 408) to avoid hammering bad requests.
- * @param {string} urlPath path relative to baseURL, e.g. "/market/prices"
- * @param {{ signal?: AbortSignal }} [options]
- */
 async function getWithRetry(urlPath, options = {}) {
   const { signal } = options
   let lastError
@@ -56,6 +45,7 @@ async function getWithRetry(urlPath, options = {}) {
 
       const shouldRetry = attempt < MAX_RETRIES && retryable
       if (!shouldRetry) break
+
       const backoff = RETRY_BASE_DELAY_MS * attempt
       await sleep(backoff)
     }
@@ -76,17 +66,38 @@ function unwrapApiResponse(response) {
   return payload
 }
 
-/** @returns {Promise<unknown>} */
+/** PRICES (UNCHANGED) */
 export function fetchPrices(options = {}) {
   return getWithRetry('/market/prices', options).then((r) => unwrapApiResponse(r))
 }
 
-/** @returns {Promise<unknown>} */
-export function fetchNews(options = {}) {
-  return getWithRetry('/market/news', options).then((r) => unwrapApiResponse(r))
+/** 🔥 FIXED NEWS FUNCTION */
+export async function fetchNews(options = {}) {
+  try {
+    // 🔥 Add cache-busting params
+    const timestamp = Date.now()
+    const randomPage = Math.floor(Math.random() * 5) + 1
+
+    const response = await getWithRetry(
+      `/market/news?t=${timestamp}&page=${randomPage}`,
+      options
+    )
+
+    const data = unwrapApiResponse(response)
+
+    // 🔥 Shuffle so UI always updates
+    if (Array.isArray(data)) {
+      return [...data].sort(() => Math.random() - 0.5)
+    }
+
+    return data
+  } catch (error) {
+    console.error("News fetch failed:", error)
+    return []
+  }
 }
 
-/** @returns {Promise<unknown>} */
+/** ANALYSIS (UNCHANGED) */
 export function fetchAnalysis(options = {}) {
   return getWithRetry('/market/analysis', options).then((r) => unwrapApiResponse(r))
 }

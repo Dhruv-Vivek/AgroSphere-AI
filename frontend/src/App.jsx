@@ -16,6 +16,8 @@ import Storage from './pages/Storage'
 import GovtSchemes from './pages/GovtSchemes'
 import Traceability from './pages/Traceability'
 import RemoteSensing from './pages/RemoteSensing'
+import MarketCategories from "./pages/MarketCategories";
+import MarketDetail from "./pages/MarketDetail";
 
 function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -54,6 +56,8 @@ export default function App() {
             <Route path="/disease" element={<DiseaseDetection />} />
             <Route path="/drone" element={<DronePage />} />
             <Route path="/market" element={<MarketIntelligence />} />
+            <Route path="/market" element={<MarketCategories />} />
+            <Route path="/market/:item" element={<MarketDetail />} />
             <Route path="/irrigation" element={<Irrigation />} />
             <Route path="/storage" element={<Storage />} />
             <Route path="/schemes" element={<GovtSchemes />} />

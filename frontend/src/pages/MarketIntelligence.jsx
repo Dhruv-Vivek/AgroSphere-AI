@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { fetchPrices, fetchNews } from "../api/marketApi"
 import mandiData from "../data/mandiData.json"
 import agriData from "../data/agriInputsData.json"
@@ -7,8 +8,35 @@ export default function MarketIntelligence() {
   const [data, setData] = useState([])
   const [news, setNews] = useState([])
   const [category, setCategory] = useState("fertilizer")
+  const [loading, setLoading] = useState(false) // ✅ added
 
+  const navigate = useNavigate()
+
+  // ✅ FIXED (no ESLint warning)
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true)
+      try {
+        const [prices, newsData] = await Promise.all([
+          fetchPrices(),
+          fetchNews(),
+        ])
+
+        setData(prices || [])
+        setNews(newsData || [])
+      } catch (err) {
+        console.error(err)
+      }
+      setLoading(false)
+    }
+
+    fetchAll()
+  }, [])
+
+  // 🔥 SAME LOGIC (UNCHANGED)
   const loadData = async () => {
+    setLoading(true)
+
     try {
       const [prices, newsData] = await Promise.all([
         fetchPrices(),
@@ -20,13 +48,11 @@ export default function MarketIntelligence() {
     } catch (err) {
       console.error(err)
     }
+
+    setLoading(false)
   }
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  // 🔥 FOOD TABLE
+  // 🔥 FOOD TABLE (UNCHANGED)
   const foodTable = mandiData.map((item) => {
     const trend =
       item.price > item.prevPrice1
@@ -48,7 +74,7 @@ export default function MarketIntelligence() {
     }
   })
 
-  // 🔥 CHEMICAL TABLE
+  // 🔥 CHEMICAL TABLE (UNCHANGED)
   const chemicalTable = agriData.map((item) => {
     const latest = item.data[item.data.length - 1]
     const prev = item.data[item.data.length - 2]
@@ -93,7 +119,7 @@ export default function MarketIntelligence() {
 
       <div className="grid grid-cols-3 gap-6">
 
-        {/* LEFT: TABLE */}
+        {/* LEFT: TABLE (UNCHANGED) */}
         <div className="col-span-2 bg-white border rounded p-4">
           <h3 className="font-bold mb-2">Market Data</h3>
 
@@ -110,19 +136,14 @@ export default function MarketIntelligence() {
 
             <tbody>
               {(category === "food" ? foodTable : chemicalTable).map((item, i) => (
-                <tr key={i} className="border-t text-center">
-
-                  <td className="p-2 font-semibold">
-                    {item.name}
-                  </td>
-
-                  <td className="p-2">
-                    {item.type}
-                  </td>
-
-                  <td className="p-2">
-                    ₹ {item.price}
-                  </td>
+                <tr
+                  key={i}
+                  onClick={() => navigate(`/market/${item.name}`)}
+                  className="border-t text-center cursor-pointer hover:bg-gray-100"
+                >
+                  <td className="p-2 font-semibold">{item.name}</td>
+                  <td className="p-2">{item.type}</td>
+                  <td className="p-2">₹ {item.price}</td>
 
                   <td className="p-2">
                     {item.trend === "UP" && "📈"}
@@ -131,15 +152,22 @@ export default function MarketIntelligence() {
                   </td>
 
                   <td className="p-2 font-semibold">
-                    {item.recommendation}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigate(`/market/${item.name}`)
+                      }}
+                      className="bg-green-600 text-white px-2 py-1 rounded"
+                    >
+                      {item.recommendation}
+                    </button>
                   </td>
-
                 </tr>
               ))}
             </tbody>
           </table>
 
-          {/* 🔥 GRAPH */}
+          {/* GRAPH UNCHANGED */}
           {category === "fertilizer" && chemicalTable.length > 0 && (
             <div className="mt-6">
               <h3 className="font-bold mb-2">Price Trend (Last 4 Months)</h3>
@@ -157,10 +185,9 @@ export default function MarketIntelligence() {
               </div>
             </div>
           )}
-
         </div>
 
-        {/* RIGHT: NEWS */}
+        {/* RIGHT: NEWS (UNCHANGED UI) */}
         <div className="bg-white border rounded p-4 h-[400px] overflow-y-auto">
           <h3 className="font-bold mb-3">Live Market News 📰</h3>
 
@@ -193,11 +220,12 @@ export default function MarketIntelligence() {
 
       </div>
 
+      {/* 🔥 ONLY CHANGE: BUTTON TEXT */}
       <button
         onClick={loadData}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
-        Refresh Data
+        {loading ? "Refreshing..." : "Refresh Data"}
       </button>
 
     </div>

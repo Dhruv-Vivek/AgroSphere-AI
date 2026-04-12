@@ -9,6 +9,8 @@ const cors = require("cors");
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
+const liveMarket = require("./routes/liveMarket");
+app.use("/api/market-live", liveMarket);
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -40,6 +42,7 @@ try {
 } catch (err) {
   console.error("❌ Route loading failed:", err.message);
 }
+
 
 // Error handler
 app.use((err, req, res, next) => {
